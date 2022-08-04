@@ -9,6 +9,7 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
+/[Bb]lender
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
@@ -47,12 +48,8 @@ ExportedObj/
 *.opendb
 *.VC.db
 
-# Unity3D generated meta files
-*.pidb.meta
-*.pdb.meta
-*.mdb.meta
-
-# Unity cache files 
+# Unity and Blender files
+*.meta
 *.cache
 
 # Unity3D generated file on crash reports
