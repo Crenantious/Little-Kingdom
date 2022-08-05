@@ -7,12 +7,15 @@ using UnityEngine.Events;
 public class Event : ScriptableObject
 {
     UnityEvent e;
+    public EventInfo eventInfo;
+
     public void Subscribe(UnityAction action)
     {
         e.AddListener(action);
     }
-    public void Invoke()
+    public void Invoke(EventInfo eventInfo = null)
     {
+        this.eventInfo = eventInfo;
         e.Invoke();
     }
 
