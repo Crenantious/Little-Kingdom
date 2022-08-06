@@ -18,6 +18,16 @@ public class Event : ScriptableObject
         this.eventInfo = eventInfo;
         e.Invoke();
     }
+    public void Invoke(EventInfoMono eventInfoMono = null)
+    {
+        eventInfo = eventInfoMono.eventInfo;
+        e.Invoke();
+    }
+    public void Invoke(EventInfoSO eventInfoSO = null)
+    {
+        eventInfo = eventInfoSO.eventInfo;
+        e.Invoke();
+    }
 
     public void Unsubscribe(UnityAction action)
     {
