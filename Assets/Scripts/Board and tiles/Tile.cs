@@ -8,6 +8,8 @@ public class Tile : MonoBehaviour
     [field: SerializeField, ReadOnly] public TileType TileType { get; private set; }
     [ReadOnly] public Vector2Int boardPosition;
 
+    public Town town;
+
     [Inject]
     public void Construct(TileType tileType)
     {
