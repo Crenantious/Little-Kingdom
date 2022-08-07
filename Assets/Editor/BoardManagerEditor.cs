@@ -6,11 +6,15 @@ public class BoardManagerEditor : Editor
 {
     public SerializedProperty tilePercentages;
     public SerializedProperty tilesParent;
+    public SerializedProperty widthInTiles;
+    public SerializedProperty heightInTiles;
 
     void OnEnable()
     {
         tilePercentages = serializedObject.FindProperty("tilePercentages");
         tilesParent = serializedObject.FindProperty("tilesParent");
+        widthInTiles = serializedObject.FindProperty("widthInTiles");
+        heightInTiles = serializedObject.FindProperty("heightInTiles");
     }
 
     public override void OnInspectorGUI()
@@ -18,6 +22,8 @@ public class BoardManagerEditor : Editor
         serializedObject.Update();
 
         EditorGUILayout.PropertyField(tilesParent);
+        EditorGUILayout.PropertyField(widthInTiles);
+        EditorGUILayout.PropertyField(heightInTiles);
         EditorGUILayout.LabelField("Total percent: " + GetTotalPercent().ToString());
 
         DisplayTilesAndPercentages();
