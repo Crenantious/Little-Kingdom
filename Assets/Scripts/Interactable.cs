@@ -11,21 +11,31 @@ public class Interactable : MonoBehaviour
     public UnityEvent onMouseUp;
     public UnityEvent onMouseOver;
     public UnityEvent onMouseDrag;
+    public UnityEvent onMouseDownUp;
+
+    bool mouseDown = false;
+    bool mouseOver = false;
+
     private void OnMouseDown()
     {
+        mouseDown = true;
         onMouseDown.Invoke();
     }
     private void OnMouseEnter()
     {
+        mouseOver = true;
         onMouseEnter.Invoke();
     }
     private void OnMouseExit()
     {
+        mouseOver = false;
         onMouseExit.Invoke();
     }
     private void OnMouseUp()
     {
         onMouseUp.Invoke();
+        if (mouseDown && mouseOver) onMouseDownUp.Invoke();
+        mouseDown = false;
     }
     private void OnMouseOver()
     {
