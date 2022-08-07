@@ -5,9 +5,9 @@ using Zenject;
 
 public class BoardManager : MonoBehaviour
 {
-    public static int boardTileWidth = 8;
-    public static int boardTileHeight = 8;
-    public static Tile[,] tiles;
+    public int widthInTiles = 8;
+    public int heightInTiles = 8;
+    public Tile[,] Tiles { get; private set; }
 
     [Inject] TileBorders tileBorders;
 
@@ -38,7 +38,7 @@ public class BoardManager : MonoBehaviour
     /// </returns>
     List<TileTypeValue> GetTileAmounts()
     {
-        int totalTiles = boardTileWidth * boardTileHeight;
+        int totalTiles = widthInTiles * heightInTiles;
         int remainingTiles = totalTiles;
 
         List<TileTypeValue> tileAmounts = new();
@@ -94,18 +94,18 @@ public class BoardManager : MonoBehaviour
     /// </summary>
     public void GenerateBoard()
     {
-        tiles = new Tile[boardTileWidth, boardTileHeight];
+        Tiles = new Tile[widthInTiles, heightInTiles];
         List<TileTypeValue> tileAmounts = GetTileAmounts();
         int remainingTiles = GetTotalTileTypeValue(tileAmounts);
 
-        if (remainingTiles < boardTileWidth * boardTileHeight)
+        if (remainingTiles < widthInTiles * heightInTiles)
         {
             throw new Exception("Not enough tiles assigned to fill the board");
         }
 
-        for (int i = 0; i < boardTileWidth; i++)
+        for (int i = 0; i < widthInTiles; i++)
         {
-            for (int j = 0; j < boardTileHeight; j++)
+            for (int j = 0; j < heightInTiles; j++)
             {
                 int tileNumber = UnityEngine.Random.Range(0, remainingTiles);
                 int tileTypeIndex = CumulativeValueToIndex(tileAmounts, tileNumber);
@@ -116,7 +116,7 @@ public class BoardManager : MonoBehaviour
                 tile.transform.SetParent(tilesParent);
                 tile.transform.position = new Vector3(i * Tile.Width, 0, j * Tile.Height);
 
-                tiles[i, j] = tile;
+                Tiles[i, j] = tile;
                 tile.boardPosition = new Vector2Int(i, j);
 
                 tileAmounts[tileTypeIndex].value--;
@@ -134,5 +134,11 @@ public class BoardManager : MonoBehaviour
     public void RemoveAllTileBorders()
     {
         tileBorders.RemoveAllTileBorders();
+    }
+
+    public Tile TryGetTileAtPosition(int x, int y)
+    {
+        if (x < 0 || x > widthInTiles || y < 0 || y > heightInTiles) return null;
+        return Tiles[x, y];
     }
 }
