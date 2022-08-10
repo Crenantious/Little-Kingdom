@@ -4,6 +4,5 @@ using UnityEngine;
 
 public class PrefabReference : MonoBehaviour
 {
-    [HideInInspector] public int referenceID;
-    public GameObject reference;
+    [HideInInspector] public string GUID;
 }
