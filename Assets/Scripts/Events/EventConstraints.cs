@@ -9,11 +9,16 @@ public class EventConstraints
     public List<GameState> statesAllowed = new();
     public List<GameState> statesNotAllowed = new();
 
-    public GameObjectConstraint gameObjectConstraint;
+    public List<GameObjectConstraint> gameObjectConstraints;
 
     [Serializable]
     public struct GameObjectConstraint
     {
+        public GameObjectConstraint(GameObject gameObject, GameObjectConstraintType constraint)
+        {
+            this.gameObject = gameObject;
+            this.constraint = constraint;
+        }
         public GameObject gameObject;
         public GameObjectConstraintType constraint;
     }
@@ -22,10 +27,10 @@ public class EventConstraints
     [Serializable]
     public enum GameObjectConstraintType
     {
-        DirectParent,
-        DirectChild,
-        Parent,
-        Child,
-        InstanceOfPrefab
+        InstanceOfPrefab = 1
+        //DirectParent = 2,
+        //DirectChild = 4,
+        //Parent = 8,
+        //Child = 16,
     }
 }

@@ -65,23 +65,38 @@ public class Event : ScriptableObject
     {
         if (actionAndConstraint.Item2 == null) return true;
 
-        bool invokeable = CheckGameObjectConstraint(actionAndConstraint.Item2.gameObjectConstraint);
+        if (!CheckGameObjectConstraints(actionAndConstraint.Item2.gameObjectConstraints) ||
+            !CheckGameStateConstraint())
+            return false;
 
-        return invokeable;
+        return true;
     }
 
-    bool CheckGameObjectConstraint(EventConstraints.GameObjectConstraint constraint)
+    bool CheckGameStateConstraint()
     {
-        if (eventInfo == null || eventInfo.gameObject == null || constraint.gameObject == null) return false;
+        return true;
+    }
 
-        bool isSatisfied = constraint.constraint switch
+    bool CheckGameObjectConstraints(List<EventConstraints.GameObjectConstraint> constraints)
+    {
+        if (eventInfo == null || eventInfo.gameObject == null || constraints.Count == 0) return false;
+
+        bool isSatisfied = true;
+        foreach (EventConstraints.GameObjectConstraint constraint in constraints)
         {
-            EventConstraints.GameObjectConstraintType.InstanceOfPrefab  => 
-                constraint.gameObject.TryGetComponent(out PrefabReference prefabReference) &&
-                eventInfo.gameObject.TryGetComponent(out PrefabReference prefabReference1) &&
-                prefabReference.GUID == prefabReference1.GUID,
-            _ => true
-        };
+            if (constraint.gameObject == null) return false;
+
+            isSatisfied = constraint.constraint switch
+            {
+                EventConstraints.GameObjectConstraintType.InstanceOfPrefab =>
+                    constraint.gameObject.TryGetComponent(out PrefabReference prefabReference) &&
+                    eventInfo.gameObject.TryGetComponent(out PrefabReference prefabReference1) &&
+                    prefabReference.GUID == prefabReference1.GUID,
+                _ => true
+            };
+
+            if (!isSatisfied) return false;
+        }
         return isSatisfied;
     }
 }
