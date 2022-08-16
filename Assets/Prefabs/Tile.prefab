@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 759143357075680127}
   - component: {fileID: 8380533436054016843}
   - component: {fileID: 1928158309248672788}
+  - component: {fileID: -7098847519845576826}
   m_Layer: 0
   m_Name: Tile
   m_TagString: Untagged
@@ -114,6 +115,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <TileType>k__BackingField: {fileID: 0}
   boardPosition: {x: 0, y: 0}
+  town: {fileID: 0}
 --- !u!114 &8380533436054016843
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,3 +175,16 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &-7098847519845576826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6170342493900214588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 377fed43b4bb71443bbd1089df45e062, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GUID: 47822369-8acf-4f84-a326-5ef6b936c167

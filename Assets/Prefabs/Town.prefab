@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9027787694590558782}
   - component: {fileID: -6194954129807741034}
+  - component: {fileID: -2777813156722099725}
   m_Layer: 0
   m_Name: Town
   m_TagString: Untagged
@@ -52,6 +53,22 @@ MonoBehaviour:
   mouseDownUpInteractable: {fileID: 11400000, guid: a244ed9f4c347f646bf23f79e486c55c, type: 2}
   townPlacedEvent: {fileID: 11400000, guid: 09c8716f24006634baae2e109fa59248, type: 2}
   camera: {fileID: 0}
+  widthInTiles: 2
+  heightInTiles: 2
+  distanceToPlaceFromOtherTowns: 1
+--- !u!114 &-2777813156722099725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9027787694590558783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 377fed43b4bb71443bbd1089df45e062, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GUID: 9d86572b-458d-4507-bf5a-6e2077b788c5
 --- !u!1001 &9027787695047924912
 PrefabInstance:
   m_ObjectHideFlags: 0
