@@ -36,14 +36,10 @@ public class BoardManagerEditor : Editor
         EditorGUILayout.BeginHorizontal();
 
         if (GUILayout.Button("Add tile"))
-        {
             tilePercentages.arraySize++;
-        }
 
         if (GUILayout.Button("Remove tile") && tilePercentages.arraySize > 0)
-        {
             tilePercentages.arraySize--;
-        }
 
         EditorGUILayout.EndHorizontal();
     }
@@ -51,9 +47,7 @@ public class BoardManagerEditor : Editor
     {
         int totalPercent = 0;
         for (int i = 0; i < tilePercentages.arraySize; i++)
-        {
             totalPercent += ((BoardManager.TileTypeValue)tilePercentages.GetArrayElementAtIndex(i).boxedValue).value;
-        }
         return totalPercent;
     }
 
