@@ -6,4 +6,9 @@ using UnityEngine;
 public class EventInfo
 {
     public GameObject gameObject;
+
+    public EventInfo(GameObject gameObject = default)
+    {
+        this.gameObject = gameObject;
+    }
 }

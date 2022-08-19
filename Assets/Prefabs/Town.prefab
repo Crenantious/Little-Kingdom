@@ -35,7 +35,7 @@ Transform:
   - {fileID: 8846086091765011543}
   - {fileID: 8846086092027813555}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &-6194954129807741034
 MonoBehaviour:
@@ -197,6 +197,19 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a051bc10aae99da4dae034f0b463e966, type: 3}
   m_PrefabInstance: {fileID: 9027787695357311320}
   m_PrefabAsset: {fileID: 0}
+--- !u!65 &1163757223
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8180873119316509705}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.8625669, y: 1.0431523, z: 0.862567}
+  m_Center: {x: -0.79550004, y: 0.52157617, z: 0.13080385}
 --- !u!114 &5632255400174853649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,8 +222,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3c1203428b11e14cb80bbe3d15ff316, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingType: {fileID: 0}
-  town: {fileID: 0}
+  <BuildingType>k__BackingField: {fileID: 0}
+  <Town>k__BackingField: {fileID: -6194954129807741034}
+  <Tier>k__BackingField: 0
+  <UpgradeCosts>k__BackingField:
+  - resourceCosts:
+    - resource: {fileID: 11400000, guid: a8c5067e11c60b9418ab9c7e03dc7cf2, type: 2}
+      cost: 5
+    - resource: {fileID: 11400000, guid: dedac5b8e0f0fcd45b7663b995c9dc4a, type: 2}
+      cost: 6
+  - resourceCosts: []
+  - resourceCosts:
+    - resource: {fileID: 11400000, guid: 6ab44f53cb3d2c046bff593060dd2cad, type: 2}
+      cost: 11111
+    - resource: {fileID: 11400000, guid: 2aa94fa07a755c040a0c55ec9bcbc4b0, type: 2}
+      cost: 333333333
+    - resource: {fileID: 11400000, guid: 62788102c3aafe74ebe8e8960255eace, type: 2}
+      cost: -90
+  <Description>k__BackingField: {fileID: 11400000, guid: 01446d5516055034ca6437ad55c08635, type: 2}
 --- !u!114 &8213856749411221618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,6 +252,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8c29dbdf4b737b4c8fd0978c14c0dbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  invokeDefaultEvents: 1
   onMouseDown:
     m_PersistentCalls:
       m_Calls: []
@@ -313,6 +343,20 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: f005f05dc7cc06240ade151c15765411, type: 3}
   m_PrefabInstance: {fileID: 9027787695577904060}
   m_PrefabAsset: {fileID: 0}
+--- !u!136 &629417596
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8180873119403937517}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.24854007
+  m_Height: 2.6224794
+  m_Direction: 1
+  m_Center: {x: 0.70847166, y: 1.3112397, z: 1.1256524}
 --- !u!114 &698202203626122021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -325,8 +369,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3c1203428b11e14cb80bbe3d15ff316, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingType: {fileID: 0}
-  town: {fileID: 0}
+  <BuildingType>k__BackingField: {fileID: 0}
+  <Town>k__BackingField: {fileID: -6194954129807741034}
+  <Tier>k__BackingField: 0
+  <UpgradeCosts>k__BackingField: []
+  <Description>k__BackingField: {fileID: 0}
 --- !u!114 &3853367725494458372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -339,6 +386,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8c29dbdf4b737b4c8fd0978c14c0dbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  invokeDefaultEvents: 1
   onMouseDown:
     m_PersistentCalls:
       m_Calls: []
@@ -429,6 +477,19 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: fafec1520371237418f0966a9f8606ee, type: 3}
   m_PrefabInstance: {fileID: 9027787695780897111}
   m_PrefabAsset: {fileID: 0}
+--- !u!65 &753724076
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8180873119739976710}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.8625669, y: 0.862567, z: 0.86256695}
+  m_Center: {x: 0.61397624, y: 0.43128344, z: -0.61397624}
 --- !u!114 &3969914449652625224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -441,8 +502,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3c1203428b11e14cb80bbe3d15ff316, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingType: {fileID: 0}
-  town: {fileID: 0}
+  <BuildingType>k__BackingField: {fileID: 0}
+  <Town>k__BackingField: {fileID: -6194954129807741034}
+  <Tier>k__BackingField: 0
+  <UpgradeCosts>k__BackingField: []
+  <Description>k__BackingField: {fileID: 0}
 --- !u!114 &7333301429788929417
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -455,6 +519,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8c29dbdf4b737b4c8fd0978c14c0dbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  invokeDefaultEvents: 1
   onMouseDown:
     m_PersistentCalls:
       m_Calls: []

@@ -23,10 +23,10 @@ public class BoardManager : MonoBehaviour
     [Serializable]
     public class TileTypeValue
     {
-        public TileType tileType;
+        public Resource tileType;
         public int value;
 
-        public TileTypeValue(TileType tileType, int value)
+        public TileTypeValue(Resource tileType, int value)
         {
             this.tileType = tileType;
             this.value = value;
@@ -50,12 +50,14 @@ public class BoardManager : MonoBehaviour
             // The second check is a cop out. Due to rounding the total amount of assigned tiles
             // might not be accurate and so this will assign the remaining tiles to the last type
             // if the total tile coverage is 100% or more. Should create an  algorithm to handle better
-            if (amount > remainingTiles || i == tilePercentages.Count - 1 && GetTotalTileTypeValue(tilePercentages) >= 100) amount = remainingTiles;
+            if (amount > remainingTiles || i == tilePercentages.Count - 1 && GetTotalTileTypeValue(tilePercentages) >= 100)
+                amount = remainingTiles;
 
             remainingTiles -= amount;
             tileAmounts.Add(new TileTypeValue(tilePercentages[i].tileType, amount));
 
-            if (remainingTiles <= 0) break;
+            if (remainingTiles <= 0)
+                break;
         }
         return tileAmounts;
     }
@@ -65,9 +67,7 @@ public class BoardManager : MonoBehaviour
     {
         int totalValue = 0;
         for (int i = 0; i < tileTypeValues.Count; i++)
-        {
             totalValue += tileTypeValues[i].value;
-        }
         return totalValue;
     }
 
@@ -83,7 +83,8 @@ public class BoardManager : MonoBehaviour
         int cumulativeTiles = 0;
         for (int i = 0; i < tileAmounts.Count; i++)
         {
-            if (cumulativeTiles + tileAmounts[i].value > cumulativeValue) return i;
+            if (cumulativeTiles + tileAmounts[i].value > cumulativeValue)
+                return i;
             cumulativeTiles += tileAmounts[i].value;
         }
         return -1;
@@ -99,9 +100,7 @@ public class BoardManager : MonoBehaviour
         int remainingTiles = GetTotalTileTypeValue(tileAmounts);
 
         if (remainingTiles < widthInTiles * heightInTiles)
-        {
             throw new Exception("Not enough tiles assigned to fill the board");
-        }
 
         for (int i = 0; i < widthInTiles; i++)
         {
@@ -109,7 +108,8 @@ public class BoardManager : MonoBehaviour
             {
                 int tileNumber = UnityEngine.Random.Range(0, remainingTiles);
                 int tileTypeIndex = CumulativeValueToIndex(tileAmounts, tileNumber);
-                if (tileTypeIndex == -1) throw new IndexOutOfRangeException("tileNumber is not found in tileAmounts");
+                if (tileTypeIndex == -1)
+                    throw new IndexOutOfRangeException("tileNumber is not found in tileAmounts");
 
                 Tile tile = tileFactory.Create(tileAmounts[tileTypeIndex].tileType);
 
@@ -121,24 +121,22 @@ public class BoardManager : MonoBehaviour
 
                 tileAmounts[tileTypeIndex].value--;
                 remainingTiles--;
-                if (tileAmounts[tileTypeIndex].value == 0) tileAmounts.RemoveAt(tileTypeIndex);
+                if (tileAmounts[tileTypeIndex].value == 0)
+                    tileAmounts.RemoveAt(tileTypeIndex);
             }
         }
     }
 
-    public void DisplayBorderAroundTiles(Tile bottomLeftTile, int width, int height, Gradient gradient)
-    {
+    public void DisplayBorderAroundTiles(Tile bottomLeftTile, int width, int height, Gradient gradient) =>
         tileBorders.DisplayBorderAroundTiles(bottomLeftTile, width, height, gradient);
-    }
 
-    public void RemoveAllTileBorders()
-    {
+    public void RemoveAllTileBorders() =>
         tileBorders.RemoveAllTileBorders();
-    }
 
     public Tile TryGetTileAtPosition(int x, int y)
     {
-        if (x < 0 || x > widthInTiles || y < 0 || y > heightInTiles) return null;
+        if (x < 0 || x >= widthInTiles || y < 0 || y >= heightInTiles)
+            return null;
         return Tiles[x, y];
     }
 }

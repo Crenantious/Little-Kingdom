@@ -9,14 +9,15 @@ public class EventListener : MonoBehaviour
 
     private void OnEnable()
     {
-        Debug.Log(0);
         if (@event)
-            @event.Subscribe(InvokeUnityEvent, constraints.eventConstraints);
+            @event.Subscribe(InvokeUnityEvent,
+                constraints ? constraints.eventConstraints : null);
     }
     private void OnValidate()
     {
         if (@event)
-            @event.Subscribe(InvokeUnityEvent, constraints.eventConstraints);
+            @event.Subscribe(InvokeUnityEvent,
+                constraints ? constraints.eventConstraints : null);
     }
 
     private void OnDestroy() =>

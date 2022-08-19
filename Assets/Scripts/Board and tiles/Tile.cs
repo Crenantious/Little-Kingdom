@@ -5,15 +5,15 @@ public class Tile : MonoBehaviour
 {
     public static float Width { get; private set; }
     public static float Height { get; private set; }
-    [field: SerializeField, ReadOnly] public TileType TileType { get; private set; }
+    [field: SerializeField, ReadOnly] public Resource Resource { get; private set; }
     [ReadOnly] public Vector2Int boardPosition;
 
     public Town town;
 
     [Inject]
-    public void Construct(TileType tileType)
+    public void Construct(Resource tileType)
     {
-        TileType = tileType;
+        Resource = tileType;
         MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
         meshRenderer.material = tileType.material;
 
@@ -23,7 +23,7 @@ public class Tile : MonoBehaviour
         // Height is the z value as models are rotated when imported
         Height = meshRenderer.bounds.size.z;
     }
-    public class Factory : PlaceholderFactory<TileType, Tile>
+    public class Factory : PlaceholderFactory<Resource, Tile>
     {
 
     }

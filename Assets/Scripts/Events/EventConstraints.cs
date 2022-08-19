@@ -13,18 +13,23 @@ public class EventConstraints
     [Serializable]
     public enum GameObjectConstraintType
     {
-        InstanceOfPrefab = 1
+        InstanceOfPrefab = 1,
+        HasComponent = 2
     }
 
     [Serializable]
     public struct GameObjectConstraint
     {
-        public GameObjectConstraint(GameObject gameObject, GameObjectConstraintType constraint)
+        public GameObjectConstraintType constraint;
+        public GameObject gameObject;
+        public Type componentType;
+
+        public GameObjectConstraint(GameObjectConstraintType constraint, GameObject gameObject = default,
+                                    Type componentType = default)
         {
             this.gameObject = gameObject;
             this.constraint = constraint;
+            this.componentType = componentType;
         }
-        public GameObject gameObject;
-        public GameObjectConstraintType constraint;
     }
 }
