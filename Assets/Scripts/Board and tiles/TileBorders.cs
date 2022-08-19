@@ -17,62 +17,26 @@ public class TileBorders : IInitializable
     [SerializeField] string borderNotAllowedGradientPropertyName = "Not allowed";
     Gradient borderGradient;
 
-    enum Side
-    {
-        None,
-        Top,
-        Bottom,
-        Left,
-        Right
-    }
-
     public class DefaultBorderGradients
     {
         public static Gradient allowed;
         public static Gradient notAllowed;
     }
 
-    class BorderInfo
+    class Sides
     {
-        public Vector3 startPosition;
-        public Vector3 endPosition;
-        public Tile tile;
-
-        public BorderInfo(Tile tile, Side lineSide)
-        {
-            this.tile = tile;
-
-            switch (lineSide)
-            {
-                case Side.Top:
-                    startPosition = new Vector3(-Tile.Width / 2, -Tile.Height / 2, 0);
-                    endPosition = new Vector3(Tile.Width / 2, -Tile.Height / 2, 0);
-                    break;
-                case Side.Bottom:
-                    startPosition = new Vector3(-Tile.Width / 2, Tile.Height / 2, 0);
-                    endPosition = new Vector3(Tile.Width / 2, Tile.Height / 2, 0);
-                    break;
-                case Side.Left:
-                    startPosition = new Vector3(-Tile.Width / 2, -Tile.Height / 2, 0);
-                    endPosition = new Vector3(-Tile.Width / 2, Tile.Height / 2, 0);
-                    break;
-                case Side.Right:
-                    startPosition = new Vector3(Tile.Width / 2, -Tile.Height / 2, 0);
-                    endPosition = new Vector3(Tile.Width / 2, Tile.Height / 2, 0);
-                    break;
-                default:
-                    break;
-            }
-        }
+        public bool left;
+        public bool right;
+        public bool top;
+        public bool bottom;
     }
-
 
     public void Initialize()
     {
         VisualEffect vfx = borderFactory.Create();
         DefaultBorderGradients.allowed = vfx.GetGradient(borderAllowedGradientPropertyName);
         DefaultBorderGradients.notAllowed = vfx.GetGradient(borderNotAllowedGradientPropertyName);
-        GameObject.Destroy(vfx);
+        UnityEngine.Object.Destroy(vfx);
     }
 
     /// <summary>
@@ -97,7 +61,7 @@ public class TileBorders : IInitializable
             throw new ArgumentOutOfRangeException("width and height must be greater than 0");
 
         borderGradient = gradient;
-        Side[] sides = new Side[2];
+        Sides sides = new();
         int posX, posY;
 
         for (int i = 0; i < width; i++)
@@ -106,24 +70,19 @@ public class TileBorders : IInitializable
             if (posX >= boardManager.widthInTiles)
                 break;
 
-            if (i == 0)sides[0] = Side.Left;
-            else if (i == width - 1 || posX == boardManager.widthInTiles - 1) sides[0] = Side.Right;
-            else sides[0] = Side.None;
+            sides.left = i == 0;
+            sides.right = i == width - 1 || posX == boardManager.widthInTiles - 1;
 
             for (int j = 0; j < height; j++)
             {
                 posY = j + bottomLeftTile.boardPosition.y;
-                if (posY >= boardManager.heightInTiles) break;
+                if (posY >= boardManager.heightInTiles)
+                    break;
 
-                if (j == 0) sides[1] = Side.Bottom;
-                else if (j == height - 1 || posY == boardManager.heightInTiles - 1) sides[1] = Side.Top;
-                else sides[1] = Side.None;
+                sides.bottom = j == 0;
+                sides.top = j == height - 1 || posY == boardManager.heightInTiles - 1;
 
-                for (int k = 0; k < 2; k++)
-                {
-                    if (sides[k] != Side.None)
-                        DisplayBorder(new BorderInfo(boardManager.Tiles[posX, posY], sides[k]));
-                }
+                DisplayBorders(boardManager.Tiles[posX, posY], sides);
             }
         }
     }
@@ -131,23 +90,39 @@ public class TileBorders : IInitializable
     public void RemoveAllTileBorders()
     {
         foreach (var vfx in borderList)
-            GameObject.Destroy(vfx);
+            UnityEngine.Object.Destroy(vfx);
         borderList.Clear();
     }
 
-    void DisplayBorder(BorderInfo borderInfo)
+    void DisplayBorders(Tile tile, Sides sides)
+    {
+        if (sides.top)
+            DisplayBorder(tile, new Vector3(-Tile.Width / 2, -Tile.Height / 2, 0),
+                                new Vector3(Tile.Width / 2, -Tile.Height / 2, 0));
+        if (sides.bottom)
+            DisplayBorder(tile, new Vector3(-Tile.Width / 2, Tile.Height / 2, 0),
+                                new Vector3(Tile.Width / 2, Tile.Height / 2, 0));
+        if (sides.left)
+            DisplayBorder(tile, new Vector3(-Tile.Width / 2, -Tile.Height / 2, 0),
+                                new Vector3(-Tile.Width / 2, Tile.Height / 2, 0));
+        if (sides.right)
+            DisplayBorder(tile, new Vector3(Tile.Width / 2, -Tile.Height / 2, 0),
+                                new Vector3(Tile.Width / 2, Tile.Height / 2, 0));
+    }
+
+    void DisplayBorder(Tile tile, Vector3 startPos, Vector3 endPos)
     {
         VisualEffect vfx = borderFactory.Create();
 
-        vfx.SetVector3(borderSideStartPosPropertyName, borderInfo.startPosition);
-        vfx.SetVector3(borderSideEndPosPropertyName, borderInfo.endPosition);
+        vfx.SetVector3(borderSideStartPosPropertyName, startPos);
+        vfx.SetVector3(borderSideEndPosPropertyName, endPos);
         vfx.SetGradient(borderColourPropertyName, borderGradient);
 
-        vfx.transform.SetParent(borderInfo.tile.transform);
+        vfx.transform.SetParent(tile.transform);
         vfx.transform.localPosition = Vector3.zero;
-        vfx.transform.localScale = new Vector3(1 / borderInfo.tile.transform.lossyScale.x,
-                                               1 / borderInfo.tile.transform.lossyScale.y,
-                                               1 / borderInfo.tile.transform.lossyScale.z);
+        vfx.transform.localScale = new Vector3(1 / tile.transform.lossyScale.x,
+                                               1 / tile.transform.lossyScale.y,
+                                               1 / tile.transform.lossyScale.z);
         borderList.Add(vfx);
     }
 }
