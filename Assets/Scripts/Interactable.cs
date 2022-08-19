@@ -5,13 +5,14 @@ using UnityEngine.Events;
 
 public class Interactable : MonoBehaviour
 {
-    public UnityEvent onMouseDown;
-    public UnityEvent onMouseEnter;
-    public UnityEvent onMouseExit;
-    public UnityEvent onMouseUp;
-    public UnityEvent onMouseOver;
-    public UnityEvent onMouseDrag;
-    public UnityEvent onMouseDownUp;
+    [SerializeField] bool invokeDefaultEvents = true;
+    [SerializeField] UnityEvent onMouseDown;
+    [SerializeField] UnityEvent onMouseEnter;
+    [SerializeField] UnityEvent onMouseExit;
+    [SerializeField] UnityEvent onMouseUp;
+    [SerializeField] UnityEvent onMouseOver;
+    [SerializeField] UnityEvent onMouseDrag;
+    [SerializeField] UnityEvent onMouseDownUp;
 
     bool mouseDown = false;
     bool mouseOver = false;
@@ -34,7 +35,8 @@ public class Interactable : MonoBehaviour
     private void OnMouseUp()
     {
         onMouseUp.Invoke();
-        if (mouseDown && mouseOver) onMouseDownUp.Invoke();
+        if (mouseDown && mouseOver)
+            onMouseDownUp.Invoke();
         mouseDown = false;
     }
     private void OnMouseOver()

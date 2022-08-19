@@ -28,7 +28,6 @@ public class EventConstraintsGameObjectTests : ZenjectUnitTestFixture
         eventInfo = new();
         eventInvoked = false;
 
-        Container.Bind<GameStateManager>().FromInstance(new()).AsSingle();
         Container.Inject(testEvent);
         SetupReferences();
     }
@@ -70,7 +69,7 @@ public class EventConstraintsGameObjectTests : ZenjectUnitTestFixture
 
     void AddConstraint(GameObject gameObject, ConstraintType constraintType)
     {
-        Constraint constraint = new(gameObject, constraintType);
+        Constraint constraint = new(constraintType, gameObject);
         eventConstraints.gameObjectConstraints.Add(constraint);
     }
 }

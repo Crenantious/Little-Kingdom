@@ -125,20 +125,18 @@ public class Event : ScriptableObject
             return false;
 
         bool isSatisfied = true;
-        foreach (var c in constraints)
+        foreach (var constraint in constraints)
         {
-            var constraint = c.constraint;
-            var gameObject = c.gameObject;
+            GameObject gameObject = constraint.gameObject;
 
-            if (!gameObject)
-                return false;
-
-            isSatisfied = constraint switch
+            isSatisfied = constraint.constraint switch
             {
                 GameObjectConstraintType.InstanceOfPrefab =>
                     gameObject.TryGetComponent(out PrefabReference prefabReference) &&
                     eventInfo.gameObject.TryGetComponent(out PrefabReference prefabReference1) &&
                     prefabReference.GUID == prefabReference1.GUID,
+                GameObjectConstraintType.HasComponent =>
+                    eventInfo.gameObject.TryGetComponent(constraint.componentType, out Component component),
                 _ => throw new NotImplementedException(),
             };
 

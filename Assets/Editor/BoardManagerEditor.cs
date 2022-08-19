@@ -58,7 +58,7 @@ public class BoardManagerEditor : Editor
             BoardManager.TileTypeValue tileTypePercent = (BoardManager.TileTypeValue)tilePercentages.GetArrayElementAtIndex(i).boxedValue;
 
             GUILayout.BeginHorizontal();
-            TileType tileType = (TileType)EditorGUILayout.ObjectField(tileTypePercent.tileType, typeof(TileType), false);
+            Resource tileType = (Resource)EditorGUILayout.ObjectField(tileTypePercent.tileType, typeof(Resource), false);
             int tilePercent = EditorGUILayout.IntField(tileTypePercent.value);
             GUILayout.EndHorizontal();
 

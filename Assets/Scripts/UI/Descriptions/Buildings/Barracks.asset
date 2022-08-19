@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4435cda0183ba434fa549b79af3c8119, type: 3}
+  m_Name: Barracks
+  m_EditorClassIdentifier: 
+  descriptions:
+  - Provides 0 guards and 0 thieves.
+  - Provides up to 1 guard and up to 1 thief.
+  - Provides up to 2 guards and up to 2 thieves.
+  - Provides up to 3 guards and up to 3 thieves.
+  - Provides up to 4 guards and up to 4 thieves.
+  - Provides up to 5 guards and up to 5 thieves.
