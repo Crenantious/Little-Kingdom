@@ -10,6 +10,7 @@ public class UIPlayerInfoPanels : MonoBehaviour
     public void AddPanel(Player player)
     {
         var p = Instantiate(panel, transform);
+        p.gameObject.SetActive(true);
         Utilities.ResetTransformLocally(p.transform);
         p.Initialise(player);
         panels.Add(player, p);

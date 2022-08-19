@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
+using DataContainers;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class GameManager : MonoBehaviour
     [Inject] readonly BoardManager boardManager;
     [Inject] readonly UIPlayerInfoPanels uiPlayerInfoPanels;
     [Inject] readonly UIOptionsMessageManager optionsMessageManager;
+    [SerializeField] List<ResourceValue> startingResources;
 
     void Start()
     {
@@ -32,8 +34,8 @@ public class GameManager : MonoBehaviour
     {
         players.Add(playerFactory.Create());
         uiPlayerInfoPanels.AddPanel(players[^1]);
-        foreach (Resource resource in References.resources)
-            players[^1].AddResource(resource, 50);
+        foreach (var resourceValue in startingResources)
+            players[^1].AddResource(resourceValue.resource, resourceValue.value);
     }
 
     void TownPlaced()

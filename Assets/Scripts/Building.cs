@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using DataContainers;
 
 public class Building : MonoBehaviour
 {
@@ -15,17 +16,17 @@ public class Building : MonoBehaviour
     [System.Serializable]
     public struct UpgradeCost
     {
-        public List<ResourceCost> resourceCosts;
+        public List<ResourceValue> resourceCosts;
         
         public bool TryGetResourceCost(Resource resource, out int cost)
         {
             if (resourceCosts != null)
             {
-                foreach (ResourceCost resourceCost in resourceCosts)
+                foreach (ResourceValue resourceCost in resourceCosts)
                 {
                     if (resourceCost.resource == resource)
                     {
-                        cost = resourceCost.cost;
+                        cost = resourceCost.value;
                         return true;
                     }
                 }
@@ -33,13 +34,6 @@ public class Building : MonoBehaviour
             cost = default;
             return false;
         }
-    }
-
-    [System.Serializable]
-    public struct ResourceCost
-    {
-        public Resource resource;
-        public int cost;
     }
 
     public UpgradeCost GetUpgradeCost(int tier) =>
@@ -59,9 +53,9 @@ public class Building : MonoBehaviour
         if (!UpgradeCosts.TryGetElement(Tier, out _))
             return false;
 
-        foreach (ResourceCost cost in UpgradeCosts[Tier].resourceCosts)
+        foreach (ResourceValue cost in UpgradeCosts[Tier].resourceCosts)
         {
-            if (Town.player.GetResourceAmount(cost.resource) < cost.cost)
+            if (Town.player.GetResourceAmount(cost.resource) < cost.value)
                 return false;
         }
         return true;
@@ -69,7 +63,7 @@ public class Building : MonoBehaviour
 
     void DeductPlayerResourcesForUpgrade()
     {
-        foreach (ResourceCost cost in UpgradeCosts[Tier].resourceCosts)
-            Town.player.AddResource(cost.resource, -cost.cost);
+        foreach (ResourceValue cost in UpgradeCosts[Tier].resourceCosts)
+            Town.player.AddResource(cost.resource, -cost.value);
     }
 }

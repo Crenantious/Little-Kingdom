@@ -20,7 +20,13 @@ public class InputManager : MonoBehaviour
         if (!cc.performed)
             return;
 
-        gameObjectMousePressedOn = GetUIObjectUnderMouse() ? null : GetNonUIObjectUnderMouse();
+        if (GetUIObjectUnderMouse())
+            gameObjectMousePressedOn = null;
+        else
+        {
+            gameObjectMousePressedOn = GetNonUIObjectUnderMouse();
+            References.MousePressedOnGameObject.Invoke(new EventInfo(gameObject: gameObjectMousePressedOn));
+        }
     }
 
     public void LeftMouseButtonReleased(InputAction.CallbackContext cc)
@@ -28,7 +34,13 @@ public class InputManager : MonoBehaviour
         if (!cc.performed)
             return;
 
-        gameObjectMouseReleasedOn = GetUIObjectUnderMouse() ? null : GetNonUIObjectUnderMouse();
+        if (GetUIObjectUnderMouse())
+            gameObjectMouseReleasedOn = null;
+        else
+        {
+            gameObjectMouseReleasedOn = GetNonUIObjectUnderMouse();
+            References.MouseReleasedOnGameObject.Invoke(new EventInfo(gameObject: gameObjectMouseReleasedOn));
+        }
 
         if (IsNewGameObjectSelected())
         {

@@ -53,9 +53,9 @@ MonoBehaviour:
   mouseDownUpInteractable: {fileID: 11400000, guid: a244ed9f4c347f646bf23f79e486c55c, type: 2}
   townPlacedEvent: {fileID: 11400000, guid: 09c8716f24006634baae2e109fa59248, type: 2}
   camera: {fileID: 0}
+  distanceToPlaceFromOtherTowns: 1
   widthInTiles: 2
   heightInTiles: 2
-  distanceToPlaceFromOtherTowns: 1
 --- !u!114 &-2777813156722099725
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,17 +228,17 @@ MonoBehaviour:
   <UpgradeCosts>k__BackingField:
   - resourceCosts:
     - resource: {fileID: 11400000, guid: a8c5067e11c60b9418ab9c7e03dc7cf2, type: 2}
-      cost: 5
+      value: 6
     - resource: {fileID: 11400000, guid: dedac5b8e0f0fcd45b7663b995c9dc4a, type: 2}
-      cost: 6
+      value: 5
   - resourceCosts: []
   - resourceCosts:
     - resource: {fileID: 11400000, guid: 6ab44f53cb3d2c046bff593060dd2cad, type: 2}
-      cost: 11111
+      value: 0
     - resource: {fileID: 11400000, guid: 2aa94fa07a755c040a0c55ec9bcbc4b0, type: 2}
-      cost: 333333333
+      value: -9
     - resource: {fileID: 11400000, guid: 62788102c3aafe74ebe8e8960255eace, type: 2}
-      cost: -90
+      value: -9
   <Description>k__BackingField: {fileID: 11400000, guid: 01446d5516055034ca6437ad55c08635, type: 2}
 --- !u!114 &8213856749411221618
 MonoBehaviour:

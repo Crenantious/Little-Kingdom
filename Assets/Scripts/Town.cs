@@ -7,7 +7,6 @@ using Zenject;
 public class Town : MonoBehaviour
 {
     public List<Building> buildings = new();
-    public Event mouseDownUpInteractable;
     public Event townPlacedEvent;
     public new Camera camera;
     public int distanceToPlaceFromOtherTowns = 1;
@@ -18,9 +17,11 @@ public class Town : MonoBehaviour
     [Inject] readonly TileBorders tileBorders;
     [Inject] readonly BoardManager boardManager;
     [Inject] readonly InputManager inputManager;
+    [Inject] readonly UIOptionsMessageManager optionsMessageManager;
 
     bool canPlace = false;
     bool isPlaced = false;
+    bool isAskingToPlace = false;
     Tile currentTile;
 
     [Inject]
@@ -32,36 +33,46 @@ public class Town : MonoBehaviour
 
     void Start()
     {
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            if (transform.GetChild(i).TryGetComponent(out Building building))
-                buildings.Add(building);
-        }
-        mouseDownUpInteractable.Subscribe(Place);
+        //for (int i = 0; i < transform.childCount; i++)
+        //{
+        //    if (transform.GetChild(i).TryGetComponent(out Building building))
+        //        buildings.Add(building);
+        //}
+        References.MouseReleasedOnGameObject.Subscribe(AskToPlace);
     }
 
-    private void Update()
+    void Update()
     {
-        if (!isPlaced)
-        {
-            Tile tile = inputManager.GetTileClosestToMouse();
-            if (tile && tile != currentTile)
-            {
-                currentTile = tile;
-                transform.position = new Vector3((currentTile.boardPosition.x + 0.5f) * Tile.Width,
-                                                 0,
-                                                 (currentTile.boardPosition.y + 0.5f) * Tile.Height);
+        if (!isPlaced && !isAskingToPlace)
+            CheckIfMouseNearNewTile();
+    }
 
-                CheckIfCanPlace();
-                Gradient gradient = canPlace ? TileBorders.DefaultBorderGradients.allowed : TileBorders.DefaultBorderGradients.notAllowed;
-                tileBorders.RemoveAllTileBorders();
-                tileBorders.DisplayBorderAroundTiles(GetBottomLeftTileOfPlacementArea(),
-                                                     distanceToPlaceFromOtherTowns * 2 + widthInTiles,
-                                                     distanceToPlaceFromOtherTowns * 2 + heightInTiles,
-                                                     gradient);
-            }
-            //Place();
-        }
+    void CheckIfMouseNearNewTile()
+    {
+        Tile tile = inputManager.GetTileClosestToMouse();
+        if (tile && tile != currentTile)
+            MoveToNewTile(tile);
+    }
+
+    void MoveToNewTile(Tile tile)
+    {
+        currentTile = tile;
+        transform.position = new Vector3((currentTile.boardPosition.x + 0.5f) * Tile.Width,
+                                         0,
+                                         (currentTile.boardPosition.y + 0.5f) * Tile.Height);
+
+        CheckIfCanPlace();
+        DisplayBorders();
+    }
+
+    void DisplayBorders()
+    {
+        Gradient gradient = canPlace ? TileBorders.DefaultBorderGradients.allowed : TileBorders.DefaultBorderGradients.notAllowed;
+        tileBorders.RemoveAllTileBorders();
+        tileBorders.DisplayBorderAroundTiles(GetBottomLeftTileOfPlacementArea(),
+                                             distanceToPlaceFromOtherTowns * 2 + widthInTiles,
+                                             distanceToPlaceFromOtherTowns * 2 + heightInTiles,
+                                             gradient);
     }
 
     void CheckIfCanPlace()
@@ -98,14 +109,17 @@ public class Town : MonoBehaviour
     {
         if (!canPlace)
             return;
-        // Show a UI options message asking to player to confirm the placement
-        throw new System.NotImplementedException();
+        optionsMessageManager.Display("Place town here?",
+                                      new List<string>() { "Yes", "No" },
+                                      AskToPlaceCallback);
+        isAskingToPlace = true;
     }
 
-    void AskToPlaceCallback(bool place)
+    void AskToPlaceCallback(int option)
     {
-        if (place)
+        if (option == 0)
             Place();
+        isAskingToPlace = false;
     }
 
     void Place()
@@ -115,6 +129,9 @@ public class Town : MonoBehaviour
             for (int j = 0; j < heightInTiles; j++)
                 boardManager.Tiles[currentTile.boardPosition.x + i, currentTile.boardPosition.y + j].town = this;
         }
+
+        tileBorders.RemoveAllTileBorders();
+        References.MouseReleasedOnGameObject.Unsubscribe(AskToPlace);
         townPlacedEvent.Invoke(new EventInfo());
         isPlaced = true;
     }

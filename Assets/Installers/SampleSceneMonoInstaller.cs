@@ -13,8 +13,10 @@ public class SampleSceneMonoInstaller : MonoInstaller
     public InputManager inputManager;
     public UIOptionsMessageManager optionsMessageManager;
 
-    public Event interactableSelectedEvent;
-    public Event interactableDeselectedEvent;
+    public Event GameObjectSelectedEvent;
+    public Event GameObjectDeselectedEvent;
+    public Event MousePressedOnGameObject;
+    public Event MouseReleasedOnGameObject;
 
     public override void InstallBindings()
     {
@@ -27,7 +29,7 @@ public class SampleSceneMonoInstaller : MonoInstaller
         Container.BindInterfacesAndSelfTo<TileBorders>().AsSingle();
 
         Container.BindFactory<Resource, Tile, Tile.Factory>().FromComponentInNewPrefab(tilePrefab);
-        Container.BindFactory<VisualEffect, TileBorders.BorderFactory>().FromComponentInNewPrefab(highlightTilesVFXPrefab);
+        Container.BindFactory<VisualEffect, Factories.Border>().FromComponentInNewPrefab(highlightTilesVFXPrefab);
         Container.BindFactory<Player, Town, Factories.Town>().FromComponentInNewPrefab(townPrefab);
         Container.BindFactory<Player, Factories.Player>();
 
@@ -37,7 +39,9 @@ public class SampleSceneMonoInstaller : MonoInstaller
     void SetupReferences()
     {
         References.gameStateManager = gameStateManager;
-        References.GameObjectSelectedEvent = interactableSelectedEvent;
-        References.GameObjectDeselectedEvent = interactableDeselectedEvent;
+        References.GameObjectSelectedEvent = GameObjectSelectedEvent;
+        References.GameObjectDeselectedEvent = GameObjectDeselectedEvent;
+        References.MousePressedOnGameObject = MousePressedOnGameObject;
+        References.MouseReleasedOnGameObject = MouseReleasedOnGameObject;
     }
 }

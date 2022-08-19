@@ -11,11 +11,8 @@ public class UIBuildingInfo : UIInfoPanel
     [SerializeField] UIResourceAndValues uiResourceAndValues;
     Building selectedBuilding;
 
-    void Start()
-    {
-        Register<Building>(this);
+    void Awake() =>
         uiResourceAndValues.Initialise();
-    }
 
     [System.Serializable]
     public struct ResourceText
@@ -30,7 +27,7 @@ public class UIBuildingInfo : UIInfoPanel
         DisplayInfo(selectedBuilding);
     }
 
-    protected override void DisplayInfo(Component component)
+    public override void DisplayInfo(Component component)
     {
         selectedBuilding = (Building)component;
 

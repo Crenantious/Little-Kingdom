@@ -6,12 +6,16 @@ using Zenject;
 
 public class TileBorders : IInitializable
 {
-    List<VisualEffect> borderList = new();
-    [Inject] BorderFactory borderFactory;
+    [Inject] readonly Factories.Border borderFactory;
+    [Inject] readonly BoardManager boardManager;
+    readonly List<VisualEffect> borderList = new();
 
+    [SerializeField] string borderSideStartPosPropertyName = "Side start pos";
+    [SerializeField] string borderSideEndPosPropertyName = "Side end pos";
+    [SerializeField] string borderColourPropertyName = "Colour";
+    [SerializeField] string borderAllowedGradientPropertyName = "Allowed";
+    [SerializeField] string borderNotAllowedGradientPropertyName = "Not allowed";
     Gradient borderGradient;
-
-    [Inject] BoardManager boardManager;
 
     enum Side
     {
@@ -62,18 +66,12 @@ public class TileBorders : IInitializable
         }
     }
 
-    public class BorderFactory : PlaceholderFactory<VisualEffect>
-    {
-
-    }
 
     public void Initialize()
     {
         VisualEffect vfx = borderFactory.Create();
-
-        DefaultBorderGradients.allowed = vfx.GetGradient("Allowed");
-        DefaultBorderGradients.notAllowed = vfx.GetGradient("Not allowed");
-
+        DefaultBorderGradients.allowed = vfx.GetGradient(borderAllowedGradientPropertyName);
+        DefaultBorderGradients.notAllowed = vfx.GetGradient(borderNotAllowedGradientPropertyName);
         GameObject.Destroy(vfx);
     }
 
@@ -88,13 +86,15 @@ public class TileBorders : IInitializable
     /// <param name="errorColour">If the partical colour should be the error colour or the non-error colour</param>
     public void DisplayBorderAroundTiles(Tile bottomLeftTile, int width, int height, Gradient gradient)
     {
-        if (bottomLeftTile == null) throw new ArgumentNullException("bottomLeftTile cannot be null");
+        if (bottomLeftTile == null)
+            throw new ArgumentNullException("bottomLeftTile cannot be null");
+
         if (bottomLeftTile.boardPosition.x < 0 || bottomLeftTile.boardPosition.x >= boardManager.widthInTiles ||
             bottomLeftTile.boardPosition.y < 0 || bottomLeftTile.boardPosition.y >= boardManager.heightInTiles)
-        {
             throw new ArgumentOutOfRangeException("bottomLeftTile.boardPosition must be in range of boardManager.tiles");
-        }
-        if (width < 1 || height < 1) throw new ArgumentOutOfRangeException("width and height must be greater than 0");
+
+        if (width < 1 || height < 1)
+            throw new ArgumentOutOfRangeException("width and height must be greater than 0");
 
         borderGradient = gradient;
         Side[] sides = new Side[2];
@@ -103,9 +103,10 @@ public class TileBorders : IInitializable
         for (int i = 0; i < width; i++)
         {
             posX = i + bottomLeftTile.boardPosition.x;
-            if (posX >= boardManager.widthInTiles) break;
+            if (posX >= boardManager.widthInTiles)
+                break;
 
-            if (i == 0) sides[0] = Side.Left;
+            if (i == 0)sides[0] = Side.Left;
             else if (i == width - 1 || posX == boardManager.widthInTiles - 1) sides[0] = Side.Right;
             else sides[0] = Side.None;
 
@@ -121,37 +122,32 @@ public class TileBorders : IInitializable
                 for (int k = 0; k < 2; k++)
                 {
                     if (sides[k] != Side.None)
-                    {
                         DisplayBorder(new BorderInfo(boardManager.Tiles[posX, posY], sides[k]));
-                    }
                 }
             }
         }
+    }
+
+    public void RemoveAllTileBorders()
+    {
+        foreach (var vfx in borderList)
+            GameObject.Destroy(vfx);
+        borderList.Clear();
     }
 
     void DisplayBorder(BorderInfo borderInfo)
     {
         VisualEffect vfx = borderFactory.Create();
 
-        vfx.SetVector3("Side start pos", borderInfo.startPosition);
-        vfx.SetVector3("Side end pos", borderInfo.endPosition);
-        vfx.SetGradient("Colour", borderGradient);
+        vfx.SetVector3(borderSideStartPosPropertyName, borderInfo.startPosition);
+        vfx.SetVector3(borderSideEndPosPropertyName, borderInfo.endPosition);
+        vfx.SetGradient(borderColourPropertyName, borderGradient);
 
         vfx.transform.SetParent(borderInfo.tile.transform);
         vfx.transform.localPosition = Vector3.zero;
         vfx.transform.localScale = new Vector3(1 / borderInfo.tile.transform.lossyScale.x,
                                                1 / borderInfo.tile.transform.lossyScale.y,
                                                1 / borderInfo.tile.transform.lossyScale.z);
-
         borderList.Add(vfx);
-    }
-
-    public void RemoveAllTileBorders()
-    {
-        foreach(var vfx in borderList)
-        {
-            GameObject.Destroy(vfx);
-        }
-        borderList.Clear();
     }
 }
