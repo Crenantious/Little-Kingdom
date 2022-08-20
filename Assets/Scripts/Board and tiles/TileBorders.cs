@@ -48,15 +48,8 @@ public class TileBorders : IInitializable
     /// <param name="width">Width of the area in tiles</param>
     /// <param name="height">Height of the area in tiles</param>
     /// <param name="errorColour">If the partical colour should be the error colour or the non-error colour</param>
-    public void DisplayBorderAroundTiles(Tile bottomLeftTile, int width, int height, Gradient gradient)
+    public void DisplayBorderAroundTiles(int bottomLeftTileX, int bottomLeftTileY, int width, int height, Gradient gradient)
     {
-        if (bottomLeftTile == null)
-            throw new ArgumentNullException("bottomLeftTile cannot be null");
-
-        if (bottomLeftTile.boardPosition.x < 0 || bottomLeftTile.boardPosition.x >= boardManager.widthInTiles ||
-            bottomLeftTile.boardPosition.y < 0 || bottomLeftTile.boardPosition.y >= boardManager.heightInTiles)
-            throw new ArgumentOutOfRangeException("bottomLeftTile.boardPosition must be in range of boardManager.tiles");
-
         if (width < 1 || height < 1)
             throw new ArgumentOutOfRangeException("width and height must be greater than 0");
 
@@ -66,7 +59,9 @@ public class TileBorders : IInitializable
 
         for (int i = 0; i < width; i++)
         {
-            posX = i + bottomLeftTile.boardPosition.x;
+            posX = i + bottomLeftTileX;
+            if (posX < 0)
+                continue;
             if (posX >= boardManager.widthInTiles)
                 break;
 
@@ -75,7 +70,10 @@ public class TileBorders : IInitializable
 
             for (int j = 0; j < height; j++)
             {
-                posY = j + bottomLeftTile.boardPosition.y;
+                posY = j + bottomLeftTileY;
+
+                if (posY < 0)
+                    continue;
                 if (posY >= boardManager.heightInTiles)
                     break;
 
@@ -120,9 +118,7 @@ public class TileBorders : IInitializable
 
         vfx.transform.SetParent(tile.transform);
         vfx.transform.localPosition = Vector3.zero;
-        vfx.transform.localScale = new Vector3(1 / tile.transform.lossyScale.x,
-                                               1 / tile.transform.lossyScale.y,
-                                               1 / tile.transform.lossyScale.z);
+
         borderList.Add(vfx);
     }
 }

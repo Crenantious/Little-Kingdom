@@ -793,7 +793,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6d9bc9a78b03634e8be96633fcadc3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilePrefab: {fileID: 6170342493900214588, guid: f099117a02a41eb488082a45e24faea0, type: 3}
+  tilePrefab: {fileID: 5982819672937975974, guid: f099117a02a41eb488082a45e24faea0, type: 3}
   highlightTilesVFXPrefab: {fileID: 1670604658944849014, guid: 960909c61f10e1a459e9798a8992dc29, type: 3}
   townPrefab: {fileID: 9027787694590558783, guid: 412535c0715d20d4690d9d0d53c1f7b2, type: 3}
   boardManager: {fileID: 1166731868}

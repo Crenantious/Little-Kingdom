@@ -60,7 +60,6 @@ public class Town : MonoBehaviour
         transform.position = new Vector3((currentTile.boardPosition.x + 0.5f) * Tile.Width,
                                          0,
                                          (currentTile.boardPosition.y + 0.5f) * Tile.Height);
-
         CheckIfCanPlace();
         DisplayBorders();
     }
@@ -69,7 +68,8 @@ public class Town : MonoBehaviour
     {
         Gradient gradient = canPlace ? TileBorders.DefaultBorderGradients.allowed : TileBorders.DefaultBorderGradients.notAllowed;
         tileBorders.RemoveAllTileBorders();
-        tileBorders.DisplayBorderAroundTiles(GetBottomLeftTileOfPlacementArea(),
+        tileBorders.DisplayBorderAroundTiles(currentTile.boardPosition.x - distanceToPlaceFromOtherTowns,
+                                             currentTile.boardPosition.y - distanceToPlaceFromOtherTowns,
                                              distanceToPlaceFromOtherTowns * 2 + widthInTiles,
                                              distanceToPlaceFromOtherTowns * 2 + heightInTiles,
                                              gradient);
@@ -94,15 +94,6 @@ public class Town : MonoBehaviour
                 }
             }
         }
-    }
-
-    Tile GetBottomLeftTileOfPlacementArea()
-    {
-        int x = currentTile.boardPosition.x - distanceToPlaceFromOtherTowns;
-        int y = currentTile.boardPosition.y - distanceToPlaceFromOtherTowns;
-        if (x < 0) x = 0;
-        if (y < 0) y = 0;
-        return boardManager.Tiles[x, y];
     }
 
     void AskToPlace()
