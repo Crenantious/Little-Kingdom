@@ -716,6 +716,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 222247683}
   m_CullTransparentMesh: 1
+--- !u!1 &223574579
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 223574580}
+  m_Layer: 0
+  m_Name: Hide objects behind camera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &223574580
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 223574579}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: -0, z: -10.13}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1687258585}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &227963460
 GameObject:
   m_ObjectHideFlags: 0
@@ -794,8 +825,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 5982819672937975974, guid: f099117a02a41eb488082a45e24faea0, type: 3}
-  highlightTilesVFXPrefab: {fileID: 1670604658944849014, guid: 960909c61f10e1a459e9798a8992dc29, type: 3}
+  highlightTilesVFXPrefab: {fileID: 1670604658944849019, guid: 960909c61f10e1a459e9798a8992dc29, type: 3}
   townPrefab: {fileID: 9027787694590558783, guid: 412535c0715d20d4690d9d0d53c1f7b2, type: 3}
+  hideObjectsBehindCamera: {fileID: 223574580}
   boardManager: {fileID: 1166731868}
   gameStateManager: {fileID: 1000128033}
   UIPlayerInfoPanels: {fileID: 348758224}
@@ -3754,7 +3786,8 @@ Transform:
   m_LocalPosition: {x: 1.46, y: 3.32, z: 6.81}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 223574580}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 20.146, y: 195.09, z: 0.001}

@@ -74,23 +74,38 @@ public class TileBorders
 
     void DisplayBorders(Tile tile, Sides sides)
     {
-        if (sides.top)
-            DisplayBorder(tile, new Vector3(-Tile.Width / 2, -Tile.Height / 2, 0),
-                                new Vector3(Tile.Width / 2, -Tile.Height / 2, 0));
         if (sides.bottom)
-            DisplayBorder(tile, new Vector3(-Tile.Width / 2, Tile.Height / 2, 0),
-                                new Vector3(Tile.Width / 2, Tile.Height / 2, 0));
+            DisplayBorder(tile, new Vector2(0, -Tile.Height / 2),
+                                0);
+        if (sides.top)
+            DisplayBorder(tile, new Vector2(0, Tile.Height / 2),
+                                180);
         if (sides.left)
-            DisplayBorder(tile, new Vector3(-Tile.Width / 2, -Tile.Height / 2, 0),
-                                new Vector3(-Tile.Width / 2, Tile.Height / 2, 0));
+            DisplayBorder(tile, new Vector2(-Tile.Width / 2, 0),
+                                90);
         if (sides.right)
-            DisplayBorder(tile, new Vector3(Tile.Width / 2, -Tile.Height / 2, 0),
-                                new Vector3(Tile.Width / 2, Tile.Height / 2, 0));
+            DisplayBorder(tile, new Vector2(Tile.Width / 2, 0),
+                                270); 
+        //if (sides.bottom)
+        //    DisplayBorder(tile, new Vector3(-Tile.Width / 2, 0, -Tile.Height / 2),
+        //                        new Vector3(Tile.Width / 2, 0, -Tile.Height / 2));
+        //if (sides.top)
+        //    DisplayBorder(tile, new Vector3(-Tile.Width / 2, 0, Tile.Height / 2),
+        //                        new Vector3(Tile.Width / 2, 0, Tile.Height / 2));
+        //if (sides.left)
+        //    DisplayBorder(tile, new Vector3(-Tile.Width / 2, 0, -Tile.Height / 2),
+        //                        new Vector3(-Tile.Width / 2, 0, Tile.Height / 2));
+        //if (sides.right)
+        //    DisplayBorder(tile, new Vector3(Tile.Width / 2, 0, -Tile.Height / 2),
+        //                        new Vector3(Tile.Width / 2, 0, Tile.Height / 2));
     }
 
-    void DisplayBorder(Tile tile, Vector3 startPos, Vector3 endPos)
+    void DisplayBorder(Tile tile, Vector2 positionOnTile, float localYRotation)
     {
-        var border = borderFactory.Create(tile, startPos, endPos, borderGradient);
+        var border = borderFactory.Create(tile,
+                                          new Vector3(positionOnTile.x, 0, positionOnTile.y),
+                                          localYRotation,
+                                          borderGradient);
         borders.Add(border);
     }
 }

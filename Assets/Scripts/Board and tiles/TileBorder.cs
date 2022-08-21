@@ -1,18 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 using Zenject;
 using System;
 
-[RequireComponent(typeof(VisualEffect))]
-public class TileBorder : MonoBehaviour, IPoolable<Tile, Vector3, Vector3, Gradient, IMemoryPool>, IDisposable
+public class TileBorder : IPoolable<Tile, Vector3, float, Gradient, IMemoryPool>, IDisposable
 {
-    [SerializeField] string sideStartPosPropertyName = "";
-    [SerializeField] string sideEndPosPropertyName = "";
-    [SerializeField] string gradientPropertyName = "";
-    [SerializeField] string allowedGradientPropertyName = "";
-    [SerializeField] string notAllowedGradientPropertyName = "";
+    const string borderLengthPropertyName = "Border length";
+    const string gradientPropertyName = "Gradient";
+    const string allowedGradientPropertyName = "Allowed";
+    const string notAllowedGradientPropertyName = "Not allowed";
 
     IMemoryPool pool;
     VisualEffect vfx;
@@ -23,30 +19,43 @@ public class TileBorder : MonoBehaviour, IPoolable<Tile, Vector3, Vector3, Gradi
         public static Gradient notAllowed;
     }
 
-
     [Inject]
-    public void Construct()
+    public void Construct(VisualEffect vfxPrefab, Transform hideBehindCamera)
     {
-        this.vfx = GetComponent<VisualEffect>();
+        if (!hideBehindCamera)
+            throw new ArgumentNullException($"Must set a value for {hideBehindCamera} otherwise disabled particles could still be visible.");
+
+        vfx = UnityEngine.Object.Instantiate(vfxPrefab);
+        vfx.transform.SetParent(hideBehindCamera);
+        Utilities.ResetTransformLocally(vfx.transform);
+
         DefaultGradients.allowed = vfx.GetGradient(allowedGradientPropertyName);
         DefaultGradients.notAllowed = vfx.GetGradient(notAllowedGradientPropertyName);
     }
 
-    public void OnSpawned(Tile tile, Vector3 start, Vector3 end, Gradient gradient, IMemoryPool pool)
+    public void OnSpawned(Tile tile, Vector3 positionOnTile, float localYRotation, Gradient gradient, IMemoryPool pool)
     {
         this.pool = pool;
+        vfx.pause = false;
 
-        vfx.SetVector3(sideStartPosPropertyName, start);
-        vfx.SetVector3(sideEndPosPropertyName, end);
+        // This is assuming the tiles are of equal width and height. If no, do some math to work out
+        // the length based on the rotation of the border, the size and shape of the tile.
+        vfx.SetFloat(borderLengthPropertyName, Tile.Width);
         vfx.SetGradient(gradientPropertyName, gradient);
 
-        transform.SetParent(tile.transform);
-        transform.localPosition = Vector3.zero;
+        vfx.transform.position = positionOnTile + tile.transform.position;
+        vfx.transform.rotation = Quaternion.Euler(0, localYRotation, 0);
+        vfx.transform.localScale = Vector3.one;
     }
 
     public void Dispose() =>
         pool.Despawn(this);
 
-    public void OnDespawned() =>
+    public void OnDespawned()
+    {
         pool = null;
+        vfx.pause = true;
+        // Reset transform to make sure it is hidden from the camera view
+        Utilities.ResetTransformLocally(vfx.transform);
+    }
 }

@@ -5,5 +5,5 @@ public class Factories
 {
     public class Player : PlaceholderFactory<global::Player> { }
     public class Town: PlaceholderFactory<global::Player, global::Town> { }
-    public class Border : PlaceholderFactory<Tile, Vector3, Vector3, Gradient, global::TileBorder> { }
+    public class Border : PlaceholderFactory<Tile, Vector3, float, Gradient, global::TileBorder> { }
 }
