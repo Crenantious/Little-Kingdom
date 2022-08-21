@@ -90,8 +90,8 @@ MonoBehaviour:
     max: Infinity
     enumValues: []
     descendantCount: 0
-  - name: Colour
-    path: Colour
+  - name: Gradient
+    path: Gradient
     tooltip: 
     sheetType: m_Gradient
     realType: Gradient
@@ -1791,7 +1791,7 @@ MonoBehaviour:
   m_InputSlots: []
   m_OutputSlots:
   - {fileID: 8926484042661614721}
-  m_ExposedName: Colour
+  m_ExposedName: Gradient
   m_Exposed: 1
   m_Order: 2
   m_Category: 

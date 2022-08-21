@@ -1,42 +1,22 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.VFX;
 using Zenject;
 
-public class TileBorders : IInitializable
+public class TileBorders
 {
     [Inject] readonly Factories.Border borderFactory;
     [Inject] readonly BoardManager boardManager;
-    readonly List<VisualEffect> borderList = new();
+    readonly List<TileBorder> borders = new();
 
-    [SerializeField] string borderSideStartPosPropertyName = "Side start pos";
-    [SerializeField] string borderSideEndPosPropertyName = "Side end pos";
-    [SerializeField] string borderColourPropertyName = "Colour";
-    [SerializeField] string borderAllowedGradientPropertyName = "Allowed";
-    [SerializeField] string borderNotAllowedGradientPropertyName = "Not allowed";
     Gradient borderGradient;
 
-    public class DefaultBorderGradients
-    {
-        public static Gradient allowed;
-        public static Gradient notAllowed;
-    }
-
-    class Sides
+    public class Sides
     {
         public bool left;
         public bool right;
         public bool top;
         public bool bottom;
-    }
-
-    public void Initialize()
-    {
-        VisualEffect vfx = borderFactory.Create();
-        DefaultBorderGradients.allowed = vfx.GetGradient(borderAllowedGradientPropertyName);
-        DefaultBorderGradients.notAllowed = vfx.GetGradient(borderNotAllowedGradientPropertyName);
-        UnityEngine.Object.Destroy(vfx);
     }
 
     /// <summary>
@@ -87,9 +67,9 @@ public class TileBorders : IInitializable
 
     public void RemoveAllTileBorders()
     {
-        foreach (var vfx in borderList)
-            UnityEngine.Object.Destroy(vfx);
-        borderList.Clear();
+        foreach (var border in borders)
+            border.Dispose();
+        borders.Clear();
     }
 
     void DisplayBorders(Tile tile, Sides sides)
@@ -110,15 +90,7 @@ public class TileBorders : IInitializable
 
     void DisplayBorder(Tile tile, Vector3 startPos, Vector3 endPos)
     {
-        VisualEffect vfx = borderFactory.Create();
-
-        vfx.SetVector3(borderSideStartPosPropertyName, startPos);
-        vfx.SetVector3(borderSideEndPosPropertyName, endPos);
-        vfx.SetGradient(borderColourPropertyName, borderGradient);
-
-        vfx.transform.SetParent(tile.transform);
-        vfx.transform.localPosition = Vector3.zero;
-
-        borderList.Add(vfx);
+        var border = borderFactory.Create(tile, startPos, endPos, borderGradient);
+        borders.Add(border);
     }
 }

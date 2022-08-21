@@ -1,5 +1,3 @@
-
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
@@ -66,7 +64,7 @@ public class Town : MonoBehaviour
 
     void DisplayBorders()
     {
-        Gradient gradient = canPlace ? TileBorders.DefaultBorderGradients.allowed : TileBorders.DefaultBorderGradients.notAllowed;
+        Gradient gradient = canPlace ? TileBorder.DefaultGradients.allowed : TileBorder.DefaultGradients.notAllowed;
         tileBorders.RemoveAllTileBorders();
         tileBorders.DisplayBorderAroundTiles(currentTile.boardPosition.x - distanceToPlaceFromOtherTowns,
                                              currentTile.boardPosition.y - distanceToPlaceFromOtherTowns,

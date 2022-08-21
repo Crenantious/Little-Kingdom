@@ -29,7 +29,8 @@ public class SampleSceneMonoInstaller : MonoInstaller
         Container.BindInterfacesAndSelfTo<TileBorders>().AsSingle();
 
         Container.BindFactory<Resource, Tile, Tile.Factory>().FromComponentInNewPrefab(tilePrefab);
-        Container.BindFactory<VisualEffect, Factories.Border>().FromComponentInNewPrefab(highlightTilesVFXPrefab);
+        Container.BindFactory<Tile, Vector3, Vector3, Gradient, TileBorder, Factories.Border>().FromMonoPoolableMemoryPool(
+            x => x.WithInitialSize(16).FromComponentInNewPrefab(highlightTilesVFXPrefab));
         Container.BindFactory<Player, Town, Factories.Town>().FromComponentInNewPrefab(townPrefab);
         Container.BindFactory<Player, Factories.Player>();
 
