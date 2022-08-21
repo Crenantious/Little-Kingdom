@@ -45,7 +45,7 @@ public class TileBorders
             if (posX >= boardManager.widthInTiles)
                 break;
 
-            sides.left = i == 0;
+            sides.left = i == 0 || posX == 0;
             sides.right = i == width - 1 || posX == boardManager.widthInTiles - 1;
 
             for (int j = 0; j < height; j++)
@@ -57,7 +57,7 @@ public class TileBorders
                 if (posY >= boardManager.heightInTiles)
                     break;
 
-                sides.bottom = j == 0;
+                sides.bottom = j == 0 || posY == 0;
                 sides.top = j == height - 1 || posY == boardManager.heightInTiles - 1;
 
                 DisplayBorders(boardManager.Tiles[posX, posY], sides);
