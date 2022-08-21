@@ -1,78 +1,22 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.VFX;
 using Zenject;
 
-public class TileBorders : IInitializable
+public class TileBorders
 {
     [Inject] readonly Factories.Border borderFactory;
     [Inject] readonly BoardManager boardManager;
-    readonly List<VisualEffect> borderList = new();
+    readonly List<TileBorder> borders = new();
 
-    [SerializeField] string borderSideStartPosPropertyName = "Side start pos";
-    [SerializeField] string borderSideEndPosPropertyName = "Side end pos";
-    [SerializeField] string borderColourPropertyName = "Colour";
-    [SerializeField] string borderAllowedGradientPropertyName = "Allowed";
-    [SerializeField] string borderNotAllowedGradientPropertyName = "Not allowed";
     Gradient borderGradient;
 
-    enum Side
+    public class Sides
     {
-        None,
-        Top,
-        Bottom,
-        Left,
-        Right
-    }
-
-    public class DefaultBorderGradients
-    {
-        public static Gradient allowed;
-        public static Gradient notAllowed;
-    }
-
-    class BorderInfo
-    {
-        public Vector3 startPosition;
-        public Vector3 endPosition;
-        public Tile tile;
-
-        public BorderInfo(Tile tile, Side lineSide)
-        {
-            this.tile = tile;
-
-            switch (lineSide)
-            {
-                case Side.Top:
-                    startPosition = new Vector3(-Tile.Width / 2, -Tile.Height / 2, 0);
-                    endPosition = new Vector3(Tile.Width / 2, -Tile.Height / 2, 0);
-                    break;
-                case Side.Bottom:
-                    startPosition = new Vector3(-Tile.Width / 2, Tile.Height / 2, 0);
-                    endPosition = new Vector3(Tile.Width / 2, Tile.Height / 2, 0);
-                    break;
-                case Side.Left:
-                    startPosition = new Vector3(-Tile.Width / 2, -Tile.Height / 2, 0);
-                    endPosition = new Vector3(-Tile.Width / 2, Tile.Height / 2, 0);
-                    break;
-                case Side.Right:
-                    startPosition = new Vector3(Tile.Width / 2, -Tile.Height / 2, 0);
-                    endPosition = new Vector3(Tile.Width / 2, Tile.Height / 2, 0);
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-
-    public void Initialize()
-    {
-        VisualEffect vfx = borderFactory.Create();
-        DefaultBorderGradients.allowed = vfx.GetGradient(borderAllowedGradientPropertyName);
-        DefaultBorderGradients.notAllowed = vfx.GetGradient(borderNotAllowedGradientPropertyName);
-        GameObject.Destroy(vfx);
+        public bool left;
+        public bool right;
+        public bool top;
+        public bool bottom;
     }
 
     /// <summary>
@@ -84,70 +28,84 @@ public class TileBorders : IInitializable
     /// <param name="width">Width of the area in tiles</param>
     /// <param name="height">Height of the area in tiles</param>
     /// <param name="errorColour">If the partical colour should be the error colour or the non-error colour</param>
-    public void DisplayBorderAroundTiles(Tile bottomLeftTile, int width, int height, Gradient gradient)
+    public void DisplayBorderAroundTiles(int bottomLeftTileX, int bottomLeftTileY, int width, int height, Gradient gradient)
     {
-        if (bottomLeftTile == null)
-            throw new ArgumentNullException("bottomLeftTile cannot be null");
-
-        if (bottomLeftTile.boardPosition.x < 0 || bottomLeftTile.boardPosition.x >= boardManager.widthInTiles ||
-            bottomLeftTile.boardPosition.y < 0 || bottomLeftTile.boardPosition.y >= boardManager.heightInTiles)
-            throw new ArgumentOutOfRangeException("bottomLeftTile.boardPosition must be in range of boardManager.tiles");
-
         if (width < 1 || height < 1)
             throw new ArgumentOutOfRangeException("width and height must be greater than 0");
 
         borderGradient = gradient;
-        Side[] sides = new Side[2];
+        Sides sides = new();
         int posX, posY;
 
         for (int i = 0; i < width; i++)
         {
-            posX = i + bottomLeftTile.boardPosition.x;
+            posX = i + bottomLeftTileX;
+            if (posX < 0)
+                continue;
             if (posX >= boardManager.widthInTiles)
                 break;
 
-            if (i == 0)sides[0] = Side.Left;
-            else if (i == width - 1 || posX == boardManager.widthInTiles - 1) sides[0] = Side.Right;
-            else sides[0] = Side.None;
+            sides.left = i == 0 || posX == 0;
+            sides.right = i == width - 1 || posX == boardManager.widthInTiles - 1;
 
             for (int j = 0; j < height; j++)
             {
-                posY = j + bottomLeftTile.boardPosition.y;
-                if (posY >= boardManager.heightInTiles) break;
+                posY = j + bottomLeftTileY;
 
-                if (j == 0) sides[1] = Side.Bottom;
-                else if (j == height - 1 || posY == boardManager.heightInTiles - 1) sides[1] = Side.Top;
-                else sides[1] = Side.None;
+                if (posY < 0)
+                    continue;
+                if (posY >= boardManager.heightInTiles)
+                    break;
 
-                for (int k = 0; k < 2; k++)
-                {
-                    if (sides[k] != Side.None)
-                        DisplayBorder(new BorderInfo(boardManager.Tiles[posX, posY], sides[k]));
-                }
+                sides.bottom = j == 0 || posY == 0;
+                sides.top = j == height - 1 || posY == boardManager.heightInTiles - 1;
+
+                DisplayBorders(boardManager.Tiles[posX, posY], sides);
             }
         }
     }
 
     public void RemoveAllTileBorders()
     {
-        foreach (var vfx in borderList)
-            GameObject.Destroy(vfx);
-        borderList.Clear();
+        foreach (var border in borders)
+            border.Dispose();
+        borders.Clear();
     }
 
-    void DisplayBorder(BorderInfo borderInfo)
+    void DisplayBorders(Tile tile, Sides sides)
     {
-        VisualEffect vfx = borderFactory.Create();
+        if (sides.bottom)
+            DisplayBorder(tile, new Vector2(0, -Tile.Height / 2),
+                                0);
+        if (sides.top)
+            DisplayBorder(tile, new Vector2(0, Tile.Height / 2),
+                                180);
+        if (sides.left)
+            DisplayBorder(tile, new Vector2(-Tile.Width / 2, 0),
+                                90);
+        if (sides.right)
+            DisplayBorder(tile, new Vector2(Tile.Width / 2, 0),
+                                270); 
+        //if (sides.bottom)
+        //    DisplayBorder(tile, new Vector3(-Tile.Width / 2, 0, -Tile.Height / 2),
+        //                        new Vector3(Tile.Width / 2, 0, -Tile.Height / 2));
+        //if (sides.top)
+        //    DisplayBorder(tile, new Vector3(-Tile.Width / 2, 0, Tile.Height / 2),
+        //                        new Vector3(Tile.Width / 2, 0, Tile.Height / 2));
+        //if (sides.left)
+        //    DisplayBorder(tile, new Vector3(-Tile.Width / 2, 0, -Tile.Height / 2),
+        //                        new Vector3(-Tile.Width / 2, 0, Tile.Height / 2));
+        //if (sides.right)
+        //    DisplayBorder(tile, new Vector3(Tile.Width / 2, 0, -Tile.Height / 2),
+        //                        new Vector3(Tile.Width / 2, 0, Tile.Height / 2));
+    }
 
-        vfx.SetVector3(borderSideStartPosPropertyName, borderInfo.startPosition);
-        vfx.SetVector3(borderSideEndPosPropertyName, borderInfo.endPosition);
-        vfx.SetGradient(borderColourPropertyName, borderGradient);
-
-        vfx.transform.SetParent(borderInfo.tile.transform);
-        vfx.transform.localPosition = Vector3.zero;
-        vfx.transform.localScale = new Vector3(1 / borderInfo.tile.transform.lossyScale.x,
-                                               1 / borderInfo.tile.transform.lossyScale.y,
-                                               1 / borderInfo.tile.transform.lossyScale.z);
-        borderList.Add(vfx);
+    void DisplayBorder(Tile tile, Vector2 positionOnTile, float localYRotation)
+    {
+        var border = borderFactory.Create(tile,
+                                          new Vector3(positionOnTile.x, 0, positionOnTile.y),
+                                          localYRotation,
+                                          borderGradient);
+        borders.Add(border);
     }
 }

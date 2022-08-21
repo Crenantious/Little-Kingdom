@@ -5,8 +5,9 @@ using Zenject;
 public class SampleSceneMonoInstaller : MonoInstaller
 {
     public GameObject tilePrefab;
-    public GameObject highlightTilesVFXPrefab;
+    public VisualEffect highlightTilesVFXPrefab;
     public GameObject townPrefab;
+    public Transform hideObjectsBehindCamera;
     public BoardManager boardManager;
     public GameStateManager gameStateManager;
     public UIPlayerInfoPanels UIPlayerInfoPanels;
@@ -28,8 +29,12 @@ public class SampleSceneMonoInstaller : MonoInstaller
 
         Container.BindInterfacesAndSelfTo<TileBorders>().AsSingle();
 
+        //Container.BindInstance(highlightTilesVFXPrefab).WhenInjectedInto<TileBorder>();
+        //Container.BindInstance(hideObjectsBehindCamera).WhenInjectedInto<TileBorder>();
+
         Container.BindFactory<Resource, Tile, Tile.Factory>().FromComponentInNewPrefab(tilePrefab);
-        Container.BindFactory<VisualEffect, Factories.Border>().FromComponentInNewPrefab(highlightTilesVFXPrefab);
+        Container.BindFactory<Tile, Vector3, float, Gradient, TileBorder, Factories.Border>().FromPoolableMemoryPool(
+            x => x.WithInitialSize(16).WithArguments(highlightTilesVFXPrefab, hideObjectsBehindCamera));
         Container.BindFactory<Player, Town, Factories.Town>().FromComponentInNewPrefab(townPrefab);
         Container.BindFactory<Player, Factories.Player>();
 

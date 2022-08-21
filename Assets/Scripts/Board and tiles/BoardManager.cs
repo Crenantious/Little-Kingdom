@@ -127,8 +127,8 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    public void DisplayBorderAroundTiles(Tile bottomLeftTile, int width, int height, Gradient gradient) =>
-        tileBorders.DisplayBorderAroundTiles(bottomLeftTile, width, height, gradient);
+    public void DisplayBorderAroundTiles(int x, int y, int width, int height, Gradient gradient) =>
+        tileBorders.DisplayBorderAroundTiles(x, y, width, height, gradient);
 
     public void RemoveAllTileBorders() =>
         tileBorders.RemoveAllTileBorders();
